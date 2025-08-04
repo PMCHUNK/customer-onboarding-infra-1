@@ -1,0 +1,50 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: customer-ui
+  namespace: prod
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: customer-ui
+  template:
+    metadata:
+      labels:
+        app: customer-ui
+    spec:
+      securityContext:
+        runAsUser: 1001
+        runAsGroup: 3000
+        runAsNonRoot: true
+        fsGroup: 2000
+      containers:
+        - name: customer-ui
+          image: abhipm1999/customer-ui:v2
+          ports:
+            - containerPort: 8080
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop:
+                - ALL
+            seccompProfile:
+              type: RuntimeDefault
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "64Mi"
+            limits:
+              cpu: "200m"
+              memory: "128Mi"
+          volumeMounts:
+            - name: tmp
+              mountPath: /tmp
+            - name: pycache
+              mountPath: /app/__pycache__
+      volumes:
+        - name: tmp
+          emptyDir: {}
+        - name: pycache
+          emptyDir: {}

@@ -1,0 +1,4 @@
+resources:
+  - customer-processor-hpa.yaml
+  - customer-ingestion-hpa.yaml
+  - customer-ui-hpa.yaml

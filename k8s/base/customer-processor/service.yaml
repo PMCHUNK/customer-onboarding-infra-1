@@ -1,0 +1,13 @@
+apiVersion: v1 
+kind: Service 
+metadata:
+  name: customer-processor
+  labels:
+    app: customer-processor
+spec:
+  selector:
+    app: customer-processor
+  ports:
+    - port: 5000
+      targetPort: 5000
+  type: ClusterIP

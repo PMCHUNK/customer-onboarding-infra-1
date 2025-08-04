@@ -1,0 +1,3 @@
+resources:
+  - secretproviderclass.yaml
+  # - spc-dockerhub.yaml

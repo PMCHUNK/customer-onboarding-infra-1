@@ -1,0 +1,52 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: customer-ingestion
+  labels:
+    app: customer-ingestion
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: customer-ingestion
+  template:
+    metadata:
+      labels:
+        app: customer-ingestion
+    spec:
+      # nodeName: aks-cdx-34870034-vmss000000
+      containers:
+        - name: ingestion
+          image: abhipm1999/customer-ingestion:v2
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 1001
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop:
+                - ALL
+            seccompProfile:
+              type: RuntimeDefault
+          ports:
+            - containerPort: 5001
+          env:
+            - name: PROCESSOR_URL
+              value: http://customer-processor:5000/process
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "64Mi"
+            limits:
+              cpu: "200m"
+              memory: "128Mi"
+          volumeMounts:
+            - name: tmp
+              mountPath: /tmp # Flask writes session data/temp here
+            - name: pycache
+              mountPath: /app/__pycache__ # optional for Python
+      volumes:
+        - name: tmp
+          emptyDir: {}
+        - name: pycache
+          emptyDir: {}

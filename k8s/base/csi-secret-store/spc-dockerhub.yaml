@@ -1,0 +1,23 @@
+apiVersion: secrets-store.csi.x-k8s.io/v1
+kind: SecretProviderClass
+metadata:
+  name: azure-keyvault-dockerconfig
+  namespace: prod
+spec:
+  provider: azure
+  parameters:
+    usePodIdentity: "false"
+    useVMManagedIdentity: "true"
+    userAssignedIdentityID: 91366920-1acf-413e-aa90-46bed3726a86
+    keyvaultName: s00181kvna2
+    objects: |
+      array:
+        - objectName: dockerconfigjson
+          objectType: secret
+    tenantId: d7c1df9a-a532-41cf-9c79-0680e0108ca6
+  secretObjects:
+    - secretName: regcred
+      type: kubernetes.io/dockerconfigjson
+      data:
+        - objectName: dockerconfigjson
+          key: .dockerconfigjson

@@ -1,0 +1,7 @@
+resources:
+  - customer-ui
+  - csi-secret-store
+  - hpa
+  - customer-ingestion
+  - customer-processor
+  - network_policies

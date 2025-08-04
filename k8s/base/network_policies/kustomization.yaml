@@ -1,0 +1,11 @@
+resources:
+  - deny-all.yaml
+  - allow-ui-to-ingestion.yaml
+  - allow-ingestion-to-processor.yaml
+  - allow-ingress-to-ui.yaml
+  - deny-all-egress.yaml
+  - allow-dns-egress.yaml
+  - allow-egress-to-postgres.yaml
+  - allow-internal-egress.yaml
+  # - allow-acme-solver-from-nginx.yaml
+  # - allow-cert-manager-egress.yaml
