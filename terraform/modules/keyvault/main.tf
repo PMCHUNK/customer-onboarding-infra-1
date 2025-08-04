@@ -8,9 +8,9 @@ data "azuread_service_principal" "terraform_spn" {
   display_name = "teraaform"
 }
 
-data "local_file" "dockerconfigjson" {
-  filename = "${path.module}/.dockerconfigjson"
-}
+# data "local_file" "dockerconfigjson" {
+#   filename = "${path.module}/.dockerconfigjson"
+# }
 
 
 resource "azurerm_key_vault" "my-kv" {
@@ -33,7 +33,7 @@ resource "azurerm_key_vault_access_policy" "self_access" {
   object_id = data.azurerm_client_config.current.object_id
 
   secret_permissions = [
-    "Get","List","Set","Delete"
+    "Get","List","Set","Delete","Purge"
   ]
 }
 
@@ -106,8 +106,8 @@ resource "azurerm_key_vault_secret" "db_port" {
 }
 
 
-resource "azurerm_key_vault_secret" "dockerconfig" {
-  name         = "dockerconfigjson"
-  value        = data.local_file.dockerconfigjson.content
-  key_vault_id = azurerm_key_vault.my-kv.id
-}
+# resource "azurerm_key_vault_secret" "dockerconfig" {
+#   name         = "dockerconfigjson"
+#   value        = data.local_file.dockerconfigjson.content
+#   key_vault_id = azurerm_key_vault.my-kv.id
+# }
