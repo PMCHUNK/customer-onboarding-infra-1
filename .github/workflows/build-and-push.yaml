@@ -4,7 +4,7 @@ on:
   push:
     paths:
       - "Docker/**/Dockerfile"
-      - ".github/workflows/build-and-deploy.yaml"
+      - ".github/workflows/build-and-push.yaml"
 
 env:
   IMAGE_TAG: v${{ github.run_number }}
