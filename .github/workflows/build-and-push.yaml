@@ -1,10 +1,10 @@
-name: Build and Deploy to AKS-1
+name: Build and Deploy to AKS
 
 on:
   push:
     paths:
       - "Docker/**/Dockerfile"
-      - ".github/workflows/build-and-deploy.yaml"
+      - ".github/workflows/build-and-push.yaml"
 
 env:
   ACR_NAME: customeronboardingacr
