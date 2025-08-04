@@ -1,19 +1,17 @@
-name: Build and Push Docker Images to AC-R
+name: Build and Deploy to AKS
 
 on:
   push:
-    branches:
-      - main
     paths:
-      - "Docker/customer-ui/**"
-      - "Docker/customer-ingestion/**"
-      - "Docker/customer-processor/**"
+      - "Docker/**/Dockerfile"
       - ".github/workflows/build-and-push.yaml"
 
 env:
-  IMAGE_TAG: ${{ github.run_number }}-${{ github.run_id }}
+  ACR_NAME: customeronboardingacr
+  IMAGE_TAG: v${{ github.run_number }}
+
 jobs:
-  build-and-push:
+  build-and-deploy:
     runs-on: ubuntu-latest
 
     steps:
@@ -25,24 +23,44 @@ jobs:
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-      - name: Azure ACR login
+      - name: Azure Container Registry Login
         uses: azure/docker-login@v1
         with:
-          login-server: ${{ secrets.ACR_NAME }}.azurecr.io
-          username: ${{ fromJson(secrets.AZURE_CREDENTIALS).clientId }}
-          password: ${{ fromJson(secrets.AZURE_CREDENTIALS).clientSecret }}
+          login-server: ${{ env.ACR_NAME }}.azurecr.io
+          username: ${{ secrets.ACR_USERNAME }}
+          password: ${{ secrets.ACR_PASSWORD }}
 
-      - name: Build and push customer-ui
+      - name: Build and push UI image
         run: |
-          docker build -t ${{ secrets.ACR_NAME }}.azurecr.io/customer-ui:${{ env.IMAGE_TAG }} ./Docker/customer-ui
-          docker push ${{ secrets.ACR_NAME }}.azurecr.io/customer-ui:${{ env.IMAGE_TAG }}
+          docker build -t $ACR_NAME.azurecr.io/customer-ui:${IMAGE_TAG} ./Docker/customer-ui
+          docker push $ACR_NAME.azurecr.io/customer-ui:${IMAGE_TAG}
 
-      - name: Build and push customer-ingestion
+      - name: Build and push ingestion image
         run: |
-          docker build -t ${{ secrets.ACR_NAME }}.azurecr.io/customer-ingestion:${{ env.IMAGE_TAG }} ./Docker/customer-ingestion
-          docker push ${{ secrets.ACR_NAME }}.azurecr.io/customer-ingestion:${{ env.IMAGE_TAG }}
+          docker build -t $ACR_NAME.azurecr.io/customer-ingestion:${IMAGE_TAG} ./Docker/customer-ingestion
+          docker push $ACR_NAME.azurecr.io/customer-ingestion:${IMAGE_TAG}
 
-      - name: Build and push customer-processor
+      - name: Build and push processor image
         run: |
-          docker build -t ${{ secrets.ACR_NAME }}.azurecr.io/customer-processor:${{ env.IMAGE_TAG }} ./Docker/customer-processor
-          docker push ${{ secrets.ACR_NAME }}.azurecr.io/customer-processor:${{ env.IMAGE_TAG }}
+          docker build -t $ACR_NAME.azurecr.io/customer-processor:${IMAGE_TAG} ./Docker/customer-processor
+          docker push $ACR_NAME.azurecr.io/customer-processor:${IMAGE_TAG}
+
+      - name: Set image tag in kustomization
+        run: |
+          cd k8s/overlays/prod
+          kustomize edit set image customeronboardingacr.azurecr.io/customer-ui=customeronboardingacr.azurecr.io/customer-ui:${IMAGE_TAG}
+          kustomize edit set image customeronboardingacr.azurecr.io/customer-ingestion=customeronboardingacr.azurecr.io/customer-ingestion:${IMAGE_TAG}
+          kustomize edit set image customeronboardingacr.azurecr.io/customer-processor=customeronboardingacr.azurecr.io/customer-processor:${IMAGE_TAG}
+
+      - name: Set up kubectl
+        uses: azure/setup-kubectl@v3
+        with:
+          version: "latest"
+
+      - name: Set up Kustomize
+        uses: imranismail/setup-kustomize@v1
+
+      - name: Deploy to AKS
+        run: |
+          az aks get-credentials --resource-group customer-onboarding-rg --name customeronboarding-aks
+          kubectl apply -k k8s/overlays/prod
