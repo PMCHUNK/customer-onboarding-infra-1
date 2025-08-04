@@ -82,3 +82,9 @@ resource "azurerm_role_assignment" "uami_vmss_contributor" {
 
 
 
+resource "azurerm_role_assignment" "github_actions_aks_admin" {
+  scope                = "/subscriptions/a503c4d4-4709-40b2-9304-a6b9c1bdb690/resourceGroups/customer-onboarding-rg/providers/Microsoft.ContainerService/managedClusters/customeronboarding-aks"
+  role_definition_name = "Azure Kubernetes Service RBAC Admin"
+  principal_id         = "8b5378e2-2cce-469d-9846-2639b09dbdb7"  # GitHub Actions SP Object ID
+}
+
