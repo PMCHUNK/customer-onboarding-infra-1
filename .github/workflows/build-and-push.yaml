@@ -1,13 +1,17 @@
-name: Build and Push Docker Images to ACR
+name: Build and Push Docker Images to AC-R
 
 on:
   push:
     branches:
       - main
+    paths:
+      - "Docker/customer-ui/**"
+      - "Docker/customer-ingestion/**"
+      - "Docker/customer-processor/**"
+      - ".github/workflows/build-and-push.yaml"
 
 env:
   IMAGE_TAG: ${{ github.run_number }}-${{ github.run_id }}
-
 jobs:
   build-and-push:
     runs-on: ubuntu-latest
