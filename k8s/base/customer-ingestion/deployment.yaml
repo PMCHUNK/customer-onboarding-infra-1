@@ -17,7 +17,7 @@ spec:
       # nodeName: aks-cdx-34870034-vmss000000
       containers:
         - name: ingestion
-          image: abhipm1999/customer-ingestion:v2
+          image: customer-ingestion
           securityContext:
             runAsNonRoot: true
             runAsUser: 1001

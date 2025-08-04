@@ -23,7 +23,7 @@ spec:
           type: RuntimeDefault
       containers:
         - name: customer-processor
-          image: abhipm1999/customer-processor:v2
+          image: customer-processor
           securityContext:
             runAsNonRoot: true
             runAsUser: 1001

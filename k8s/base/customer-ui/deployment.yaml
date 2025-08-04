@@ -20,7 +20,7 @@ spec:
         fsGroup: 2000
       containers:
         - name: customer-ui
-          image: abhipm1999/customer-ui:v2
+          image: customer-ui
           ports:
             - containerPort: 8080
           securityContext:
