@@ -6,3 +6,5 @@
 .env.*
 *.exe
 *.zip
+terraform/modules/keyvault/.dockerconfigjson
+terraform.auto.tfvars

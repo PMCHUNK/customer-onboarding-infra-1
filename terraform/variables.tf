@@ -36,3 +36,10 @@ variable "db_server_name" {
   default = "customer-pg-db0"
   
 }
+
+variable "subscription_id" {}
+variable "tenant_id" {}
+variable "client_id" {}
+variable "client_secret" {
+  sensitive = true
+}
