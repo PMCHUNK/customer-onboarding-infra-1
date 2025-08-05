@@ -1,9 +1,6 @@
 data "azurerm_client_config" "current" {}
 
 
-data "azuread_service_principal" "github_actions" {
-  client_id = "ff350fe6-25d1-4fa8-bc1d-6f4009a81e1f"
-}
 
 
 locals {
