@@ -8,13 +8,18 @@ on:
   pull_request:
     paths:
       - "terraform/**"
-
 env:
   TF_IN_AUTOMATION: true
   ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
   ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
   ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
   ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
+
+  TF_VAR_client_id: ${{ secrets.ARM_CLIENT_ID }}
+  TF_VAR_client_secret: ${{ secrets.ARM_CLIENT_SECRET }}
+  TF_VAR_subscription_id: ${{ secrets.ARM_SUBSCRIPTION_ID }}
+  TF_VAR_tenant_id: ${{ secrets.ARM_TENANT_ID }}
+# ARM_* is needed for Azure CLI commands; TF_VAR_* is used by Terraform.
 
 jobs:
   terraform:
