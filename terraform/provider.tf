@@ -4,7 +4,18 @@ terraform {
       source = "hashicorp/azurerm"
       version = "4.32.0"
     }
+    azuread = {
+      source  = "hashicorp/azuread"
+      version = "2.45.0" # or latest compatible version
+    }
+    
   }
+}
+
+provider "azuread" {
+  tenant_id     = var.tenant_id
+  client_id     = var.client_id
+  client_secret = var.client_secret
 }
 
 provider "azurerm" {

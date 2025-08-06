@@ -37,15 +37,16 @@ resource "azurerm_key_vault_access_policy" "self_access" {
   ]
 }
 
-resource "azurerm_key_vault_access_policy" "aks_kv_acess" {
-  key_vault_id = azurerm_key_vault.my-kv.id
-  tenant_id = data.azurerm_client_config.current.tenant_id
-  object_id = var.aks_identity_principal_id
+# resource "azurerm_key_vault_access_policy" "aks_kv_acess" {
+#   key_vault_id = azurerm_key_vault.my-kv.id
+#   tenant_id = data.azurerm_client_config.current.tenant_id
+#   object_id = var.aks_identity_principal_id
 
-  secret_permissions = [
-    "Get","List","Set","Delete","Purge"
-  ]
-}
+#   secret_permissions = [
+#     "Get","List","Set","Delete","Purge"
+#   ]
+#   depends_on = [ azurerm_key_vault.my-kv ]
+# }
 
 resource "azurerm_key_vault_access_policy" "aks_mi_policy" {
   key_vault_id = azurerm_key_vault.my-kv.id
@@ -54,7 +55,7 @@ resource "azurerm_key_vault_access_policy" "aks_mi_policy" {
   object_id = var.aks_mi_principal_id
 
   secret_permissions = [
-    "Get",
+    "Get","List","Set","Delete","Purge"
   ]
 }
 
