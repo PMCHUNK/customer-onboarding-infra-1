@@ -34,6 +34,7 @@ module "aks" {
   vm_size = "standard_B2s"
   aks_subnet_id = module.vnet.aks_subnet_id
   acr_id = module.acr.acr_id
+  depends_on = [ module.resource_group ]
 }
 
 module "storage_account" {
