@@ -54,14 +54,15 @@ jobs:
           kustomize edit set image customer-ingestion=${{ secrets.ACR_NAME }}.azurecr.io/customer-ingestion:${{ env.IMAGE_TAG }}
           kustomize edit set image customer-processor=${{ secrets.ACR_NAME }}.azurecr.io/customer-processor:${{ env.IMAGE_TAG }}
 
-      - name: Commit and push updated kustomization.yaml
+      - name: Set git credentials and push
         run: |
           git config --global user.email "github-actions@github.com"
           git config --global user.name "github-actions"
+          git remote set-url origin https://x-access-token:${{ secrets.GH_PAT }}@github.com/PMCHUNK/customer-onboarding-infra-1.git
 
           git add k8s/overlays/prod/kustomization.yaml
           git commit -m "Update image tags to ${{ env.IMAGE_TAG }}" || echo "No changes to commit"
-          git push
+          git push origin main
 
       - name: Set up kubectl
         uses: azure/setup-kubectl@v3
