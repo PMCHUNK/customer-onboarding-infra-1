@@ -6,6 +6,8 @@ on:
       - "Docker/**/Dockerfile"
       - ".github/workflows/build-and-push.yaml"
 
+permissions:
+  contents: write
 env:
   IMAGE_TAG: v${{ github.run_number }}
 
@@ -53,15 +55,14 @@ jobs:
           kustomize edit set image customer-processor=${{ secrets.ACR_NAME }}.azurecr.io/customer-processor:${{ env.IMAGE_TAG }}
 
       - name: Commit and push updated kustomization.yaml
-        env:
-          GH_PAT: ${{ secrets.GH_PAT }}
         run: |
           git config --global user.email "github-actions@github.com"
           git config --global user.name "github-actions"
-          git remote set-url origin https://PMCHUNK:${GH_PAT}@github.com/PMCHUNK/customer-onboarding-infra-1.git
+
           git add k8s/overlays/prod/kustomization.yaml
           git commit -m "Update image tags to ${{ env.IMAGE_TAG }}" || echo "No changes to commit"
-          git push origin main
+          git push
+
       - name: Set up kubectl
         uses: azure/setup-kubectl@v3
         with:
