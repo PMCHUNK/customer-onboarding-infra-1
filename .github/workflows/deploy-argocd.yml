@@ -1,0 +1,71 @@
+name: Deploy ArgoCD to AKS
+
+on:
+  workflow_dispatch:
+
+jobs:
+  deploy-argocd:
+    runs-on: ubuntu-latest
+
+    env:
+      RESOURCE_GROUP: myResourceGroup
+      CLUSTER_NAME: myAKSCluster
+      NAMESPACE: argocd
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Azure Login
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Set up kubectl
+        uses: azure/aks-set-context@v3
+        with:
+          resource-group: ${{ env.RESOURCE_GROUP }}
+          cluster-name: ${{ env.CLUSTER_NAME }}
+
+      - name: Create ArgoCD Namespace
+        run: |
+          kubectl create namespace $NAMESPACE || true
+
+      - name: Install ArgoCD
+        run: |
+          kubectl apply -n $NAMESPACE -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
+
+      - name: Wait for ArgoCD pods to be ready
+        run: |
+          kubectl wait --for=condition=available --timeout=300s deployment/argocd-server -n $NAMESPACE
+
+      - name: Patch argocd-server service to LoadBalancer
+        run: |
+          kubectl patch svc argocd-server -n $NAMESPACE --type merge -p '{"spec": {"type": "LoadBalancer"}}'
+
+      - name: Get External IP
+        run: |
+          echo "Waiting for external IP..."
+          for i in {1..30}; do
+            EXTERNAL_IP=$(kubectl get svc argocd-server -n $NAMESPACE -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
+            if [[ -n "$EXTERNAL_IP" ]]; then
+              echo "External IP: $EXTERNAL_IP"
+              echo "ARGOCD_URL=https://$EXTERNAL_IP" >> $GITHUB_ENV
+              break
+            fi
+            echo "Still waiting... ($i)"
+            sleep 10
+          done
+
+      - name: Get ArgoCD Admin Credentials
+        run: |
+          USERNAME=admin
+          PASSWORD=$(kubectl get secret argocd-initial-admin-secret -n $NAMESPACE -o jsonpath="{.data.password}" | base64 --decode)
+          echo "ARGOCD_USERNAME=$USERNAME" >> $GITHUB_ENV
+          echo "ARGOCD_PASSWORD=$PASSWORD" >> $GITHUB_ENV
+
+      - name: Output ArgoCD Access Info
+        run: |
+          echo "🌐 ArgoCD URL: $ARGOCD_URL"
+          echo "👤 Username: $ARGOCD_USERNAME"
+          echo "🔑 Password: $ARGOCD_PASSWORD"
