@@ -8,8 +8,8 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      RESOURCE_GROUP: myResourceGroup
-      CLUSTER_NAME: myAKSCluster
+      RESOURCE_GROUP: customer-onboarding-rg
+      CLUSTER_NAME: customeronboarding-aks
       NAMESPACE: argocd
 
     steps:
