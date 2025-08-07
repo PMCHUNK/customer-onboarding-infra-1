@@ -16,6 +16,12 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Stop loop - exit if triggered by GitHub Actions bot
+        if: github.actor == 'github-actions[bot]'
+        run: |
+          echo "Triggered by GitHub Actions bot — exiting to prevent loop"
+          exit 0
+
       - name: Checkout code
         uses: actions/checkout@v3
 
