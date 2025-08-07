@@ -7,5 +7,3 @@ resources:
   - allow-dns-egress.yaml
   - allow-egress-to-postgres.yaml
   - allow-internal-egress.yaml
-  # - allow-acme-solver-from-nginx.yaml
-  # - allow-cert-manager-egress.yaml
