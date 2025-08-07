@@ -86,26 +86,26 @@ resource "azurerm_subnet_network_security_group_association" "vm_subnet_asssco" 
 
 }
 
-resource "azurerm_network_interface" "db_vm_ni" {
-  name                = "db_vm-nic"
-  location            = var.location
-  resource_group_name = var.resource_group_name
+# resource "azurerm_network_interface" "db_vm_ni" {
+#   name                = "db_vm-nic"
+#   location            = var.location
+#   resource_group_name = var.resource_group_name
 
-  ip_configuration {
-    name                          = "internal"
-    subnet_id                     = azurerm_subnet.vm.id
-    private_ip_address_allocation = "Dynamic"
-    public_ip_address_id = azurerm_public_ip.db_vm_public_ip.id
-  }
-}
+#   ip_configuration {
+#     name                          = "internal"
+#     subnet_id                     = azurerm_subnet.vm.id
+#     private_ip_address_allocation = "Dynamic"
+#     public_ip_address_id = azurerm_public_ip.db_vm_public_ip.id
+#   }
+# }
 
-resource "azurerm_public_ip" "db_vm_public_ip" {
-  name                = "acceptanceTestPublicIp1"
-  resource_group_name = var.resource_group_name
-  location            = var.location
-  allocation_method   = "Static"
+# resource "azurerm_public_ip" "db_vm_public_ip" {
+#   name                = "acceptanceTestPublicIp1"
+#   resource_group_name = var.resource_group_name
+#   location            = var.location
+#   allocation_method   = "Static"
 
-  tags = {
-    environment = "Production"
-  }
-}
+#   tags = {
+#     environment = "Production"
+#   }
+# }

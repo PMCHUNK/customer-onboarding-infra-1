@@ -22,10 +22,10 @@ output "vnet_id" {
  value= azurerm_virtual_network.app-vent.id 
 }
 
-output "vent_ni_id" {
-  value = azurerm_network_interface.db_vm_ni.id
-}
+# output "vent_ni_id" {
+#   value = azurerm_network_interface.db_vm_ni.id
+# }
 
-output "db_vm_public_ip" {
-  value = azurerm_public_ip.db_vm_public_ip.ip_address
-}
+# output "db_vm_public_ip" {
+#   value = azurerm_public_ip.db_vm_public_ip.ip_address
+# }
