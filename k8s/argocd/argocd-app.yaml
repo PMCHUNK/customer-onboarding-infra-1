@@ -1,0 +1,20 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: customer-onboarding
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: "https://github.com/PMCHUNK/customer-onboarding-infra-1.git"
+    targetRevision: main
+    path: k8s/overlays/prod
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: prod
+  syncPolicy:
+    automated:
+      prune: true # ✅ Delete resources removed from Git
+      selfHeal: true # ✅ Auto-fix drift if live state differs
+    syncOptions:
+      - CreateNamespace=true # ✅ Create "prod" namespace if not exists
