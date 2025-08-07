@@ -1,4 +1,4 @@
-name: Build and Deploy to AKS1
+name: Build and Deploy to AKS
 
 on:
   push:
@@ -57,7 +57,14 @@ jobs:
         with:
           version: "latest"
 
-      - name: Deploy to AKS
+      - name: Get AKS Credentials
         run: |
           az aks get-credentials --resource-group customer-onboarding-rg --name customeronboarding-aks --overwrite-existing
+
+      - name: Install Azure Key Vault CSI Driver
+        run: |
+          kubectl apply -f https://raw.githubusercontent.com/Azure/secrets-store-csi-driver-provider-azure/master/deployment/provider-azure-installer.yaml
+
+      - name: Deploy to AKS
+        run: |
           kubectl apply -k k8s/overlays/prod
