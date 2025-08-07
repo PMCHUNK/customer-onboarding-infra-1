@@ -1,4 +1,4 @@
-name: Build and Deploy to AKS1S
+name: Build and Deploy to AKS
 
 on:
   push:

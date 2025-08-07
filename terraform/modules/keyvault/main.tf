@@ -33,7 +33,7 @@ resource "azurerm_key_vault_access_policy" "self_access" {
   object_id = data.azurerm_client_config.current.object_id
 
   secret_permissions = [
-    "Get","List","Set","Delete","Purge"
+    "Get","List","Set","Delete","Purge", "Recover"
   ]
 }
 
