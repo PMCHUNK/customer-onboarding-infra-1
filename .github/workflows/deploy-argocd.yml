@@ -42,6 +42,18 @@ jobs:
       - name: Patch argocd-server service to LoadBalancer
         run: |
           kubectl patch svc argocd-server -n $NAMESPACE --type merge -p '{"spec": {"type": "LoadBalancer"}}'
+      - name: Install Argo CD Image Updater
+        run: |
+          kubectl apply -n $NAMESPACE -f https://raw.githubusercontent.com/argoproj-labs/argocd-image-updater/master/manifests/install.yaml
+      - name: Create GitHub PAT Secret for ArgoCD Image Updater
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+        run: |
+          kubectl delete secret git-token-secret -n $NAMESPACE --ignore-not-found
+          kubectl create secret generic git-token-secret \
+            --from-literal=username=git \
+            --from-literal=password=$GH_TOKEN \
+            -n $NAMESPACE
 
       - name: Get External IP
         run: |

@@ -3,6 +3,11 @@ kind: Application
 metadata:
   name: customer-onboarding
   namespace: argocd
+  annotations:
+    # 👇 Required annotations for Argo CD Image Updater
+    argocd-image-updater.argoproj.io/write-back-method: git
+    argocd-image-updater.argoproj.io/write-back-target: kustomization
+    argocd-image-updater.argoproj.io/git-credentials: secret:git-token-secret
 spec:
   project: default
   source:
@@ -14,7 +19,7 @@ spec:
     namespace: prod
   syncPolicy:
     automated:
-      prune: true # ✅ Delete resources removed from Git
-      selfHeal: true # ✅ Auto-fix drift if live state differs
+      prune: true
+      selfHeal: true
     syncOptions:
-      - CreateNamespace=true # ✅ Create "prod" namespace if not exists
+      - CreateNamespace=true

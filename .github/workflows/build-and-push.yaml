@@ -1,4 +1,4 @@
-name: Build and Deploy to AKS
+name: Build and Push to ACR
 
 on:
   push:
@@ -8,11 +8,12 @@ on:
 
 permissions:
   contents: write
+
 env:
   IMAGE_TAG: v${{ github.run_number }}
 
 jobs:
-  build-and-deploy:
+  build-and-push:
     runs-on: ubuntu-latest
 
     steps:
@@ -47,42 +48,3 @@ jobs:
         run: |
           docker build -t ${{ secrets.ACR_NAME }}.azurecr.io/customer-processor:${{ env.IMAGE_TAG }} ./Docker/customer-processor
           docker push ${{ secrets.ACR_NAME }}.azurecr.io/customer-processor:${{ env.IMAGE_TAG }}
-
-      - name: Install Kustomize CLI
-        run: |
-          curl -s "https://raw.githubusercontent.com/kubernetes-sigs/kustomize/master/hack/install_kustomize.sh" | bash
-          sudo mv kustomize /usr/local/bin
-
-      - name: Update image tags in kustomization
-        run: |
-          cd k8s/overlays/prod
-          kustomize edit set image customer-ui=${{ secrets.ACR_NAME }}.azurecr.io/customer-ui:${{ env.IMAGE_TAG }}
-          kustomize edit set image customer-ingestion=${{ secrets.ACR_NAME }}.azurecr.io/customer-ingestion:${{ env.IMAGE_TAG }}
-          kustomize edit set image customer-processor=${{ secrets.ACR_NAME }}.azurecr.io/customer-processor:${{ env.IMAGE_TAG }}
-
-      - name: Set git credentials and push
-        run: |
-          git config --global user.email "github-actions@github.com"
-          git config --global user.name "github-actions"
-          git remote set-url origin https://x-access-token:${{ secrets.GH_PAT }}@github.com/PMCHUNK/customer-onboarding-infra-1.git
-
-          git add k8s/overlays/prod/kustomization.yaml
-          git commit -m "Update image tags to ${{ env.IMAGE_TAG }}" || echo "No changes to commit"
-          git push origin main
-
-      - name: Set up kubectl
-        uses: azure/setup-kubectl@v3
-        with:
-          version: "latest"
-
-      - name: Get AKS Credentials
-        run: |
-          az aks get-credentials --resource-group customer-onboarding-rg --name customeronboarding-aks --overwrite-existing
-
-      - name: Install Azure Key Vault CSI Driver
-        run: |
-          kubectl apply -f https://raw.githubusercontent.com/Azure/secrets-store-csi-driver-provider-azure/master/deployment/provider-azure-installer.yaml
-
-      - name: Deploy to AKS
-        run: |
-          kubectl apply -k k8s/overlays/prod
