@@ -7,10 +7,7 @@ resources:
 images:
   - name: customer-ui
     newName: customeronboardingacr.azurecr.io/customer-ui
-    newTag: latest
   - name: customer-ingestion
     newName: customeronboardingacr.azurecr.io/customer-ingestion
-    newTag: latest
   - name: customer-processor
     newName: customeronboardingacr.azurecr.io/customer-processor
-    newTag: latest
