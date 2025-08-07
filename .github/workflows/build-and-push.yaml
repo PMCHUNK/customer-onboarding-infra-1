@@ -58,7 +58,7 @@ jobs:
         run: |
           git config --global user.email "github-actions@github.com"
           git config --global user.name "github-actions"
-          git remote set-url origin https://x-access-token:${GH_PAT}@github.com/PMCHUNK/customer-onboarding-infra-1.git
+          git remote set-url origin https://PMCHUNK:${GH_PAT}@github.com/PMCHUNK/customer-onboarding-infra-1.git
           git add k8s/overlays/prod/kustomization.yaml
           git commit -m "Update image tags to ${{ env.IMAGE_TAG }}" || echo "No changes to commit"
           git push origin main
