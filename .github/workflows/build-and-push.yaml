@@ -1,4 +1,4 @@
-name: Build and Push to ACR1S
+name: Build and Push to ACR
 
 on:
   push:
