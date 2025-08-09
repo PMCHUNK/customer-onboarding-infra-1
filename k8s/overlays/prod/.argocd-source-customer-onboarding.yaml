@@ -1,5 +1,5 @@
 kustomize:
   images:
-  - customeronbordingacr.azurecr.io/customer-ui:v33
+  - customeronbordingacr.azurecr.io/customer-ui:v34
   - customeronbordingacr.azurecr.io/customer-processor:v33
   - customeronbordingacr.azurecr.io/customer-ingestion:v33
