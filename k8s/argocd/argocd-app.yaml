@@ -4,9 +4,12 @@ metadata:
   name: customer-onboarding
   namespace: argocd
   annotations:
-    # 👇 Required annotations for Argo CD Image Updater
+    argocd-image-updater.argoproj.io/image-list: |
+      customeronbordingacr.azurecr.io/customer-ingestion,
+      customeronbordingacr.azurecr.io/customer-processor,
+      customeronbordingacr.azurecr.io/customer-ui
     argocd-image-updater.argoproj.io/write-back-method: git
-    argocd-image-updater.argoproj.io/write-back-target: kustomization
+    argocd-image-updater.argoproj.io/write-back-target: .argocd-source-customer-onboarding.yaml
     argocd-image-updater.argoproj.io/git-credentials: secret:git-token-secret
 spec:
   project: default
