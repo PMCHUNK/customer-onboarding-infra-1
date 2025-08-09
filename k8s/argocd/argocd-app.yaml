@@ -5,11 +5,14 @@ metadata:
   namespace: argocd
   annotations:
     argocd-image-updater.argoproj.io/image-list: |
-      customeronbordingacr.azurecr.io/customer-ingestion,
-      customeronbordingacr.azurecr.io/customer-processor,
-      customeronbordingacr.azurecr.io/customer-ui
+      customer-ingestion=customeronbordingacr.azurecr.io/customer-ingestion,
+      customer-processor=customeronbordingacr.azurecr.io/customer-processor,
+      customer-ui=customeronbordingacr.azurecr.io/customer-ui
+    argocd-image-updater.argoproj.io/customer-ingestion.pull-secret: secret:argocd/acr-creds#auth
+    argocd-image-updater.argoproj.io/customer-processor.pull-secret: secret:argocd/acr-creds#auth
+    argocd-image-updater.argoproj.io/customer-ui.pull-secret: secret:argocd/acr-creds#auth
     argocd-image-updater.argoproj.io/write-back-method: git
-    argocd-image-updater.argoproj.io/write-back-target: .argocd-source-customer-onboarding.yaml
+    argocd-image-updater.argoproj.io/write-back-target: k8s/overlays/prod/.argocd-source-customer-onboarding.yaml
     argocd-image-updater.argoproj.io/git-credentials: secret:git-token-secret
 spec:
   project: default

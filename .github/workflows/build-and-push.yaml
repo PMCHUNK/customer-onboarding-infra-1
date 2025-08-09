@@ -48,3 +48,7 @@ jobs:
         run: |
           docker build -t ${{ secrets.ACR_NAME }}.azurecr.io/customer-processor:${{ env.IMAGE_TAG }} ./Docker/customer-processor
           docker push ${{ secrets.ACR_NAME }}.azurecr.io/customer-processor:${{ env.IMAGE_TAG }}
+
+      - name: Install Azure Secrets Store CSI Driver Provider
+        run: |
+          kubectl apply -f https://raw.githubusercontent.com/Azure/secrets-store-csi-driver-provider-azure/master/deployment/provider-azure-installer.yaml
