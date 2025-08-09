@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: acr-creds
+  namespace: argocd
+type: Opaque
+data:
+  auth: NmJjZWQwZjEtNDA5MS00MWFiLTk4OTItZjc2OWZhNzkwMjgxOjc5bzhRfnRjNl9oSWRhc1BGMEVwQ0IzR0xJdDdzbjlYYWJIMUJiLVo=
