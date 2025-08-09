@@ -12,11 +12,5 @@ images:
 - name: customer-ui
   newName: customeronbordingacr.azurecr.io/customer-ui
   newTag: v26
-- name: customeronbordingacr.azurecr.io/customer-ingestion
-  newTag: v30
-- name: customeronbordingacr.azurecr.io/customer-processor
-  newTag: v30
-- name: customeronbordingacr.azurecr.io/customer-ui
-  newTag: v30
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
