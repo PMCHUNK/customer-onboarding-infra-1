@@ -8,7 +8,7 @@ COPY . .
 
 RUN pip install flask requests
 
-# Set correct permissions
+# Set correct permissions 
 RUN chown -R 1001:1001 /app
 
 # Switch to non-root user
